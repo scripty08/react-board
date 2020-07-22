@@ -1,17 +1,24 @@
 import React from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Column } from './Column';
 import './Board.scss';
 
 export const Board = (props) => {
-    const { state, setState } = props;
+    const { state, setState, cards, editing } = props;
 
     const board = state.columnOrder.map((columnId, index) => {
         const column = state.columns[columnId];
         const tasks = column.taskIds.map((taskId) => {
             return state.tasks[taskId]
         });
-        return <Column key={column.id} column={column} tasks={tasks} index={index}/>;
+        return <Column
+            key={column.id}
+            column={column}
+            tasks={tasks}
+            index={index}
+            cards={cards}
+            editing={editing}
+        />;
     });
 
     const onDragEnd = result => {
@@ -95,18 +102,17 @@ export const Board = (props) => {
     return (
         <DragDropContext
             onDragEnd={onDragEnd}
+            isDragDisabled={!editing}
         >
 
-            <Droppable droppableId={'all-columns'} direction={'horizontal'} type={'column'}>
+            <Droppable isDragDisabled={!editing} droppableId={'all-columns'} direction={'horizontal'} type={'column'}>
                 {(provided) => (
                     <div
                         className={'board'}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                     >
-
-                            {board}
-
+                        {board}
                         {provided.placeholder}
                     </div>
                 )}

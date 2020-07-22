@@ -1,26 +1,28 @@
 import { createStore } from '@scripty/react-store';
 
 export default createStore({
-    name: 'placementsStore',
+    name: 'boardsStore',
     model: {
         fields: [
-            { name: 'placements', type: 'array' },
             { name: 'assignment', type: 'string' },
+            { name: 'tasks', type: 'object' },
+            { name: 'columns', type: 'object' },
+            { name: 'columnOrder', type: 'array' },
         ]
     },
     proxy: {
         rootProperty: 'entries',
         api: {
-            findPlacements: {
-                url: '/modules/findPlacements',
+            read: {
+                url: '/boards/read',
                 method: 'get'
             },
-            updatePlacements: {
-                url: '/modules/updatePlacements',
+            update: {
+                url: '/boards/update',
                 method: 'post'
             },
-            destroyPlacements: {
-                url: '/modules/destroyPlacements',
+            destroy: {
+                url: '/boards/destroy',
                 method: 'post'
             }
         }

@@ -1,18 +1,20 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
+import { Card } from './Card';
 
 const Container = styled.div`
     background-color: ${props => (props.isDragging ? 'lightgreen' : 'inherit')};
 `;
 
 export const Task = (props) => {
-    const { task, index } = props;
+    const { task, index, cards, editing} = props;
 
     return (
         <Draggable
             draggableId={task.id}
             index={index}
+            isDraggable={false}
         >
             {(provided, snapshot) => (
                 <Container
@@ -22,7 +24,11 @@ export const Task = (props) => {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                 >
-                    {task.content}
+                    <Card
+                        editing={editing}
+                        task={task}
+                        index={index}
+                        cards={cards} />
                 </Container>
             )}
 

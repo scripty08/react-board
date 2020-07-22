@@ -1,27 +1,35 @@
 .board {
 
+    padding: 5px;
+
+    #column-1 {
+        width: 20%;
+    }
+
+    #column-2 {
+        width: 60%;
+    }
+
+    #column-3 {
+        width: 20%;
+    }
+
     display: flex;
 
     .column {
-        margin: 8px;
-        padding: 8px;
-        border: 1px solid lightgrey;
+        padding: 5px;
         border-radius: 2px;
         width: 300px;
         background-color: white;
         display: flex;
         flex-direction: column;
 
-
-
         .h3 {
             padding: 8px;
         }
 
         .task {
-            border: 1px solid lightgrey;
             border-radius: 2px;
-            padding: 8px;
             margin-bottom: 8px;
         }
     }
