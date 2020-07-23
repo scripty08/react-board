@@ -1,20 +1,28 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Board } from '../../../src';
 import { useStore } from '@scripty/react-store';
-import { AddButton, SaveButton } from '@scripty/react-buttons';
+import { EditButton, SaveButton } from '@scripty/react-buttons';
 import { Article } from '@scripty/react-articles';
+import { nanoid } from 'nanoid';
 
 export const Example = () => {
     const { boardsStore } = useStore('boardsStore');
     const data = boardsStore.getAt(0);
+    const [editing, setEditing] = useState(false);
 
     useEffect(() => {
         boardsStore.proxy.read({ assignment: 'Dashboard' });
     }, []);
 
-    const onAdd = () => {
-        data.tasks['task-5'] = {
-            id: 'task-5',
+    const onEdit = () => {
+       setEditing(!editing);
+    }
+
+    const onAddBtnClick = (columnId) => {
+        let id = nanoid();
+
+        data.tasks[id] = {
+            id: id,
             type: 'Article',
             edit: true,
             content: {
@@ -23,12 +31,18 @@ export const Example = () => {
             }
         };
 
-        data.columns['column-2'].taskIds.push('task-5');
+        data.columns[columnId].taskIds.unshift(id);
+        data.set(data);
+    }
+
+    const onDeleteBtnClick = (task) => {
+        delete data.tasks[task.id]
         data.set(data);
     }
 
     const onSave = () => {
-        boardsStore.proxy.update({ assignment: 'Dashboard', ...data })
+        boardsStore.proxy.update({ assignment: 'Dashboard', ...data });
+        setEditing(!editing);
     }
 
     const onOkBtnClick = (task, content) => {
@@ -37,19 +51,34 @@ export const Example = () => {
         data.set(data);
     }
 
-    const ArticleCard = (task, editing) => {
-        return <Article edit={task.edit} {...task.content} showEditBtn={editing} onOkBtnClick={onOkBtnClick.bind(null, task)}/>
+    const onCancelBtnClick = (task) => {
+        delete data.tasks[task.id]
+        data.set(data);
+    }
+
+    const ArticleCard = (props) => {
+        return (
+            <Article
+                edit={props.edit}
+                {...props.content}
+                showToolbar={props.editing}
+                onOkBtnClick={onOkBtnClick.bind(null, props)}
+                onCancelBtnClick={onCancelBtnClick.bind(null, props)}
+                onDeleteBtnClick={onDeleteBtnClick.bind(null, props)}
+            />
+        );
     }
 
     return (
         <Fragment>
-            <AddButton onClick={onAdd}/>
             <SaveButton onClick={onSave}/>
+            <EditButton onClick={onEdit}/>
             <Board
                 state={data}
                 setState={state => data.set(state)}
                 cards={{ Article: ArticleCard }}
-                editing={true}
+                editing={editing}
+                onAddBtnClick={onAddBtnClick}
             />
         </Fragment>
     )

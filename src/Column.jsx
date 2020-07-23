@@ -2,6 +2,7 @@ import React from 'react';
 import { Task } from './Task';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
+import { AddButton } from '@scripty/react-buttons';
 
 const Container = styled.div`
     padding: 8px;
@@ -19,14 +20,26 @@ const Title = styled.h3`
     background-color: ${props => (props.editing ? '#fcfcfc' : 'none')};
     border: ${props => (props.editing ? '1px dotted lightgrey' : 'none')};
     border-width: 1px 1px 0 1px;
+    span {
+       display: inline-bock;
+       float: right
+    }
 `;
-
 const InnerList = React.memo(({ tasks, cards, editing }) => {
-    return tasks.map((task, index) => <Task index={index} key={task.id} task={task} cards={cards} editing={editing}/>)
+    return tasks.map((task, index) => {
+        if (task) {
+            return <Task index={index} key={task.id} task={task} cards={cards} editing={editing}/>
+        }
+        return null;
+    })
 });
 
 export const Column = (props) => {
-    const { column, tasks, index, cards, editing } = props;
+    const { column, tasks, index, cards, editing, onAddBtnClick = () => {} } = props;
+
+    const onClick = () => {
+        onAddBtnClick(column.id);
+    }
 
     return (
         <Draggable isDragDisabled={!editing} draggableId={column.id} index={index}>
@@ -38,7 +51,7 @@ export const Column = (props) => {
                     ref={provider.innerRef}
                 >
                     <Title editing={editing} {...provider.dragHandleProps}>
-                        {column.title}
+                        {column.title} <span><AddButton color={'white'} iconBtn rounded onClick={onClick} /></span>
                     </Title>
                     <Droppable isDropDisabled={!editing} droppableId={column.id} type={'task'}>
                         {(provided, snapshot) => (

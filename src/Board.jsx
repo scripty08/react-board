@@ -1,10 +1,10 @@
 import React from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Column } from './Column';
 import './Board.scss';
 
 export const Board = (props) => {
-    const { state, setState, cards, editing } = props;
+    const { state, setState, cards, editing, onAddBtnClick } = props;
 
     const board = state.columnOrder.map((columnId, index) => {
         const column = state.columns[columnId];
@@ -18,6 +18,7 @@ export const Board = (props) => {
             index={index}
             cards={cards}
             editing={editing}
+            onAddBtnClick={onAddBtnClick}
         />;
     });
 
@@ -102,10 +103,10 @@ export const Board = (props) => {
     return (
         <DragDropContext
             onDragEnd={onDragEnd}
-            isDragDisabled={!editing}
         >
 
-            <Droppable isDragDisabled={!editing} droppableId={'all-columns'} direction={'horizontal'} type={'column'}>
+
+            <Droppable isDropDisabled={!editing} droppableId={'all-columns'} direction={'horizontal'} type={'column'}>
                 {(provided) => (
                     <div
                         className={'board'}

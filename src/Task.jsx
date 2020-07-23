@@ -9,12 +9,11 @@ const Container = styled.div`
 
 export const Task = (props) => {
     const { task, index, cards, editing} = props;
-
     return (
         <Draggable
             draggableId={task.id}
             index={index}
-            isDraggable={false}
+            isDragDisabled={!editing}
         >
             {(provided, snapshot) => (
                 <Container
