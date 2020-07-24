@@ -1,11 +1,10 @@
 import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Column } from './Column';
-import './Board.scss';
+import { ContainerFlex } from '@scripty/styles';
 
 export const Board = (props) => {
     const { state, setState, cards, editing, onAddBtnClick } = props;
-
     const board = state.columnOrder.map((columnId, index) => {
         const column = state.columns[columnId];
         const tasks = column.taskIds.map((taskId) => {
@@ -108,14 +107,14 @@ export const Board = (props) => {
 
             <Droppable isDropDisabled={!editing} droppableId={'all-columns'} direction={'horizontal'} type={'column'}>
                 {(provided) => (
-                    <div
+                    <ContainerFlex
                         className={'board'}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                     >
                         {board}
                         {provided.placeholder}
-                    </div>
+                    </ContainerFlex>
                 )}
             </Droppable>
 

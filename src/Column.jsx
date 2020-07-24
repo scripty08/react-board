@@ -4,6 +4,21 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { AddButton } from '@scripty/react-buttons';
 
+const StyledColumn = styled.div`
+    padding: 5px;
+    border-radius: 2px;
+    background-color: white;
+
+    .h3 {
+        padding: 8px;
+    }
+
+    .task {
+        border-radius: 2px;
+        margin-bottom: 8px;
+    }
+`;
+
 const Container = styled.div`
     padding: 8px;
     padding: ${props => (props.editing ? '8px' : '0')};
@@ -17,6 +32,7 @@ const Container = styled.div`
 const Title = styled.h3`
     display: ${props => (props.editing ? 'true' : 'none')};
     padding: 8px;
+    margin: 0;
     background-color: ${props => (props.editing ? '#fcfcfc' : 'none')};
     border: ${props => (props.editing ? '1px dotted lightgrey' : 'none')};
     border-width: 1px 1px 0 1px;
@@ -25,6 +41,7 @@ const Title = styled.h3`
        float: right
     }
 `;
+
 const InnerList = React.memo(({ tasks, cards, editing }) => {
     return tasks.map((task, index) => {
         if (task) {
@@ -41,12 +58,14 @@ export const Column = (props) => {
         onAddBtnClick(column.id);
     }
 
+    const colCls = (index === 1) ? 'col-6': 'col-3'
+
     return (
         <Draggable isDragDisabled={!editing} draggableId={column.id} index={index}>
             {(provider) => (
-                <div
-                    className={'column'}
+                <StyledColumn
                     id={column.id}
+                    className={colCls}
                     {...provider.draggableProps}
                     ref={provider.innerRef}
                 >
@@ -66,7 +85,7 @@ export const Column = (props) => {
                             </Container>
                         )}
                     </Droppable>
-                </div>
+                </StyledColumn>
             )}
         </Draggable>
     );

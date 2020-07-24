@@ -33,6 +33,7 @@ export const Example = () => {
 
         data.columns[columnId].taskIds.unshift(id);
         data.set(data);
+        boardsStore.setData(data);
     }
 
     const onDeleteBtnClick = (task) => {
@@ -49,11 +50,15 @@ export const Example = () => {
         data.tasks[task.id].content = content;
         delete data.tasks[task.id]['edit'];
         data.set(data);
+        boardsStore.setData(data);
     }
 
     const onCancelBtnClick = (task) => {
-        delete data.tasks[task.id]
-        data.set(data);
+        if (task.content.title === '' && task.content.title === '') {
+            delete data.tasks[task.id]
+            data.set(data);
+            boardsStore.setData(data);
+        }
     }
 
     const ArticleCard = (props) => {
