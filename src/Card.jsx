@@ -7,7 +7,6 @@ export const Card = (props) => {
         task,
         editing
     } = props;
-
     if (task.type) {
         const Component = cards[task.type]
         return (

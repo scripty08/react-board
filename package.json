@@ -24,7 +24,7 @@
   "dependencies": {
     "@atlaskit/css-reset": "^6.0.0",
     "@scripty/board": "^0.1.7",
-    "@scripty/react-buttons": "^0.1.5",
+    "@scripty/react-buttons": "^0.1.8",
     "@scripty/styles": "^0.1.40",
     "nanoid": "^3.1.10",
     "prop-types": "^15.7.2",
@@ -45,6 +45,7 @@
     "@scripty/articles": "^0.1.7",
     "@scripty/mongo": "^0.6.0",
     "@scripty/react-articles": "^0.1.15",
+    "@scripty/react-login": "^0.1.3",
     "@scripty/react-store": "^0.7.18",
     "@scripty/server": "^0.3.4",
     "@svgr/webpack": "^5.4.0",

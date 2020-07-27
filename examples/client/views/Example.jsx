@@ -5,6 +5,7 @@ import { EditButton, SaveButton } from '@scripty/react-buttons';
 import { Article } from '@scripty/react-articles';
 import { nanoid } from 'nanoid';
 import './Example.scss';
+import { Login } from '@scripty/react-login';
 
 export const Example = () => {
     const { boardsStore } = useStore('boardsStore');
@@ -19,12 +20,11 @@ export const Example = () => {
        setEditing(!editing);
     }
 
-    const onAddBtnClick = (columnId) => {
+    const onAddBtnClick = (columnId, type) => {
         let id = nanoid();
-
         data.tasks[id] = {
             id: id,
-            type: 'Article',
+            type: type,
             edit: true,
             content: {
                 title: '',
@@ -62,6 +62,14 @@ export const Example = () => {
         }
     }
 
+    const onSubmit = (data) => {
+        console.log('login submit action', '  ---------------------- ');
+    }
+
+    const LoginComponent = () => {
+        return <Login loginPath={'/'} onLoginSubmit={onSubmit} />
+    }
+
     const ArticleCard = (props) => {
         return (
             <Article
@@ -82,7 +90,7 @@ export const Example = () => {
             <Board
                 state={data}
                 setState={state => data.set(state)}
-                cards={{ Article: ArticleCard }}
+                cards={{ Article: ArticleCard, Login: LoginComponent }}
                 editing={editing}
                 onAddBtnClick={onAddBtnClick}
             />

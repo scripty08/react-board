@@ -35,9 +35,10 @@ const Title = styled.h3`
     background-color: ${props => (props.editing ? '#fcfcfc' : 'transparent')};
     border: ${props => (props.editing ? '1px dotted lightgrey' : 'none')};
     border-width: 1px 1px 0 1px;
-    span {
+
+    > span {
+       float: right;
        display: inline-bock;
-       float: right
     }
 `;
 
@@ -53,9 +54,19 @@ const InnerList = React.memo(({ tasks, cards, editing }) => {
 export const Column = (props) => {
     const { column, tasks, index, cards, editing, onAddBtnClick = () => {} } = props;
 
-    const onClick = () => {
-        onAddBtnClick(column.id);
-    }
+    const onClick = (key) => {
+        onAddBtnClick(column.id, key);
+    };
+
+    const getMenu = () => {
+        let menu = [];
+        Object.keys(cards).forEach((key) => {
+            menu.push(<a aria-current={'page'} href={'#'} onClick={onClick.bind(null, key)} className={'active'}>{key}</a>);
+            console.log(key, ' key ---------------------- ');
+        });
+
+        return menu;
+    };
 
     const colCls = (index === 1) ? 'col-6': 'col-3'
 
@@ -69,7 +80,7 @@ export const Column = (props) => {
                     ref={provider.innerRef}
                 >
                     <Title editing={editing} {...provider.dragHandleProps}>
-                        {column.title} <span><AddButton color={'white'} iconBtn rounded onClick={onClick} /></span>
+                        {column.title} <span><AddButton color={'white'} iconBtn rounded items={getMenu()} /></span>
                     </Title>
                     <Droppable isDropDisabled={!editing} droppableId={column.id} type={'task'}>
                         {(provided, snapshot) => (
