@@ -45,8 +45,6 @@ export const Board = (props) => {
 
     }).filter(rec => rec !== null);
 
-    console.log(footer, ' footer <------------');
-
     const onDragEnd = result => {
         const { destination, source, draggableId, type } = result;
         if (!destination) {

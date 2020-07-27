@@ -62,7 +62,6 @@ export const Column = (props) => {
         let menu = [];
         Object.keys(cards).forEach((key) => {
             menu.push(<a aria-current={'page'} href={'#'} onClick={onClick.bind(null, key)} className={'active'}>{key}</a>);
-            console.log(key, ' key ---------------------- ');
         });
 
         return menu;
