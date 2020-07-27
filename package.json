@@ -1,6 +1,6 @@
 {
   "name": "@scripty/react-board",
-  "version": "0.1.5",
+  "version": "0.1.9",
   "author": "Danijel Garic",
   "license": "MIT",
   "description": "",
@@ -25,7 +25,7 @@
     "@atlaskit/css-reset": "^6.0.0",
     "@scripty/board": "^0.1.7",
     "@scripty/react-buttons": "^0.1.5",
-    "@scripty/styles": "^0.1.1",
+    "@scripty/styles": "^0.1.40",
     "nanoid": "^3.1.10",
     "prop-types": "^15.7.2",
     "react": "16.11.0",

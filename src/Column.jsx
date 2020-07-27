@@ -7,7 +7,7 @@ import { AddButton } from '@scripty/react-buttons';
 const StyledColumn = styled.div`
     padding: 5px;
     border-radius: 2px;
-    background-color: white;
+    background-color: transparent;
 
     .h3 {
         padding: 8px;
@@ -24,16 +24,15 @@ const Container = styled.div`
     padding: ${props => (props.editing ? '8px' : '0')};
     border: ${props => (props.editing ? '1px dotted lightgrey' : 'none')};
     transition: background-color 0.2s ease;
-    background-color: ${props => (props.isDraggingOver ? 'lightgrey' : 'white')};
-    flex-grow: 1;
-    min-height: 100px;
+    background-color: ${props => (props.isDraggingOver ? 'lightgrey' : 'transparent')};
+    min-height: 85px;
 `;
 
 const Title = styled.h3`
     display: ${props => (props.editing ? 'true' : 'none')};
     padding: 8px;
     margin: 0;
-    background-color: ${props => (props.editing ? '#fcfcfc' : 'none')};
+    background-color: ${props => (props.editing ? '#fcfcfc' : 'transparent')};
     border: ${props => (props.editing ? '1px dotted lightgrey' : 'none')};
     border-width: 1px 1px 0 1px;
     span {

@@ -1,25 +1,51 @@
 import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Column } from './Column';
-import { ContainerFlex } from '@scripty/styles';
+import { ContainerFlex, FooterFlex } from '@scripty/styles';
 
 export const Board = (props) => {
     const { state, setState, cards, editing, onAddBtnClick } = props;
-    const board = state.columnOrder.map((columnId, index) => {
-        const column = state.columns[columnId];
-        const tasks = column.taskIds.map((taskId) => {
-            return state.tasks[taskId]
-        });
-        return <Column
-            key={column.id}
-            column={column}
-            tasks={tasks}
-            index={index}
-            cards={cards}
-            editing={editing}
-            onAddBtnClick={onAddBtnClick}
-        />;
-    });
+    const content = state.columnOrder.map((columnId, index) => {
+        if (columnId.indexOf('column') !== -1) {
+            const column = state.columns[columnId];
+            const tasks = column.taskIds.map((taskId) => {
+                return state.tasks[taskId]
+            });
+            return <Column
+                key={column.id}
+                column={column}
+                tasks={tasks}
+                index={index}
+                cards={cards}
+                editing={editing}
+                onAddBtnClick={onAddBtnClick}
+            />;
+        }
+        return null;
+
+    }).filter(rec => rec !== null);
+
+    const footer = state.columnOrder.map((columnId, index) => {
+        if (columnId.indexOf('footer') !== -1) {
+            const column = state.columns[columnId];
+            const tasks = column.taskIds.map((taskId) => {
+                return state.tasks[taskId]
+            });
+            return <Column
+                key={column.id}
+                column={column}
+                tasks={tasks}
+                index={index}
+                cards={cards}
+                editing={editing}
+                onAddBtnClick={onAddBtnClick}
+            />;
+        }
+        return null;
+
+    }).filter(rec => rec !== null);
+
+    console.log(footer, ' footer <------------');
 
     const onDragEnd = result => {
         const { destination, source, draggableId, type } = result;
@@ -104,17 +130,31 @@ export const Board = (props) => {
             onDragEnd={onDragEnd}
         >
 
-
-            <Droppable isDropDisabled={!editing} droppableId={'all-columns'} direction={'horizontal'} type={'column'}>
+            <Droppable isDropDisabled={!editing} droppableId={'content-columns'} direction={'horizontal'} type={'column'}>
                 {(provided) => (
                     <ContainerFlex
-                        className={'board'}
+                        id={'content'}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
+                        layout={'sized'}
                     >
-                        {board}
+                        {content}
                         {provided.placeholder}
                     </ContainerFlex>
+                )}
+            </Droppable>
+
+            <Droppable isDropDisabled={!editing} droppableId={'footer-columns'} direction={'horizontal'} type={'column'}>
+                {(provided) => (
+                    <FooterFlex
+                        id={'footer'}
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        layout={'sized'}
+                    >
+                        {footer}
+                        {provided.placeholder}
+                    </FooterFlex>
                 )}
             </Droppable>
 

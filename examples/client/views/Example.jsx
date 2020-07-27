@@ -4,6 +4,7 @@ import { useStore } from '@scripty/react-store';
 import { EditButton, SaveButton } from '@scripty/react-buttons';
 import { Article } from '@scripty/react-articles';
 import { nanoid } from 'nanoid';
+import './Example.scss';
 
 export const Example = () => {
     const { boardsStore } = useStore('boardsStore');
