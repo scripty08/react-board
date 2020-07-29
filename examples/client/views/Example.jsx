@@ -37,26 +37,21 @@ export const Example = () => {
         boardsStore.setData(data);
     }
 
-    const onDeleteBtnClick = (task) => {
-        delete data.tasks[task.id]
-        data.set(data);
-    }
-
-    const onSave = () => {
-        boardsStore.proxy.update({ assignment: 'Dashboard', ...data });
-        setEditing(!editing);
-    }
-
-    const onOkBtnClick = (task, content) => {
-        data.tasks[task.id].content = content;
-        delete data.tasks[task.id]['edit'];
+    const onOkBtnClick = (id, article) => {
+        data.tasks[id].content = article;
+        delete data.tasks[id]['edit'];
         data.set(data);
         boardsStore.setData(data);
     }
 
-    const onCancelBtnClick = (task) => {
-        if (task.content.title === '' && task.content.title === '') {
-            delete data.tasks[task.id]
+    const onDeleteBtnClick = (id) => {
+        delete data.tasks[id]
+        data.set(data);
+    }
+
+    const onCancelBtnClick = (id, content) => {
+        if (content.title === '' && content.title === '') {
+            delete data.tasks[id]
             data.set(data);
             boardsStore.setData(data);
         }
@@ -66,19 +61,27 @@ export const Example = () => {
         console.log('login submit action', '  ---------------------- ');
     }
 
+    const onSave = () => {
+        boardsStore.proxy.update({ assignment: 'Dashboard', ...data });
+        setEditing(!editing);
+    }
+
     const LoginComponent = () => {
         return <Login loginPath={'/'} onLoginSubmit={onSubmit} />
     }
 
     const ArticleCard = (props) => {
+        const { edit, content, editing, id } = props;
+
         return (
             <Article
-                edit={props.edit}
-                {...props.content}
-                showToolbar={props.editing}
-                onOkBtnClick={onOkBtnClick.bind(null, props)}
-                onCancelBtnClick={onCancelBtnClick.bind(null, props)}
-                onDeleteBtnClick={onDeleteBtnClick.bind(null, props)}
+                edit={edit}
+                {...content}
+                id={id}
+                showToolbar={editing}
+                onOkBtnClick={onOkBtnClick.bind(null, id )}
+                onCancelBtnClick={onCancelBtnClick.bind(null, id, content )}
+                onDeleteBtnClick={onDeleteBtnClick.bind(null, id, content )}
             />
         );
     }

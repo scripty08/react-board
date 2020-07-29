@@ -20,17 +20,16 @@ const StyledColumn = styled.div`
 `;
 
 const Container = styled.div`
-    padding: 8px;
     padding: ${props => (props.editing ? '8px' : '0')};
     border: ${props => (props.editing ? '1px dotted lightgrey' : 'none')};
     transition: background-color 0.2s ease;
     background-color: ${props => (props.isDraggingOver ? 'lightgrey' : 'transparent')};
-    min-height: 85px;
+    min-height: ${props => (props.editing ? '85px' : '0')};
 `;
 
 const Title = styled.h3`
     display: ${props => (props.editing ? 'true' : 'none')};
-    padding: 8px;
+    padding: ${props => (props.editing ? '8px' : '0')};
     margin: 0;
     background-color: ${props => (props.editing ? '#fcfcfc' : 'transparent')};
     border: ${props => (props.editing ? '1px dotted lightgrey' : 'none')};
@@ -60,26 +59,24 @@ export const Column = (props) => {
 
     const getMenu = () => {
         let menu = [];
-        Object.keys(cards).forEach((key) => {
-            menu.push(<a aria-current={'page'} href={'#'} onClick={onClick.bind(null, key)} className={'active'}>{key}</a>);
+        Object.keys(cards).forEach((key, idx) => {
+            menu.push(<a key={idx} aria-current={'page'} href={'#'} onClick={onClick.bind(null, key)} className={'active'}>{key}</a>);
         });
 
         return menu;
     };
-
-    const colCls = (index === 1) ? 'col-6': 'col-3'
 
     return (
         <Draggable isDragDisabled={!editing} draggableId={column.id} index={index}>
             {(provider) => (
                 <StyledColumn
                     id={column.id}
-                    className={colCls}
+                    className={column.class}
                     {...provider.draggableProps}
                     ref={provider.innerRef}
                 >
                     <Title editing={editing} {...provider.dragHandleProps}>
-                        {column.title} <span><AddButton color={'white'} iconBtn rounded items={getMenu()} /></span>
+                        {column.title} <span key={index}><AddButton color={'white'} iconBtn rounded items={getMenu()} /></span>
                     </Title>
                     <Droppable isDropDisabled={!editing} droppableId={column.id} type={'task'}>
                         {(provided, snapshot) => (

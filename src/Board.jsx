@@ -1,49 +1,14 @@
 import React from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Column } from './Column';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { getData, getDroppable } from './Helper';
 import { ContainerFlex, FooterFlex } from '@scripty/styles';
 
 export const Board = (props) => {
     const { state, setState, cards, editing, onAddBtnClick } = props;
-    const content = state.columnOrder.map((columnId, index) => {
-        if (columnId.indexOf('column') !== -1) {
-            const column = state.columns[columnId];
-            const tasks = column.taskIds.map((taskId) => {
-                return state.tasks[taskId]
-            });
-            return <Column
-                key={column.id}
-                column={column}
-                tasks={tasks}
-                index={index}
-                cards={cards}
-                editing={editing}
-                onAddBtnClick={onAddBtnClick}
-            />;
-        }
-        return null;
-
-    }).filter(rec => rec !== null);
-
-    const footer = state.columnOrder.map((columnId, index) => {
-        if (columnId.indexOf('footer') !== -1) {
-            const column = state.columns[columnId];
-            const tasks = column.taskIds.map((taskId) => {
-                return state.tasks[taskId]
-            });
-            return <Column
-                key={column.id}
-                column={column}
-                tasks={tasks}
-                index={index}
-                cards={cards}
-                editing={editing}
-                onAddBtnClick={onAddBtnClick}
-            />;
-        }
-        return null;
-
-    }).filter(rec => rec !== null);
+    const content = getData('column', state, cards, editing, onAddBtnClick);
+    const footer = getData('footer', state, cards, editing, onAddBtnClick);
+    const top = getData('top', state, cards, editing, onAddBtnClick);
+    const bottom = getData('bottom', state, cards, editing, onAddBtnClick);
 
     const onDragEnd = result => {
         const { destination, source, draggableId, type } = result;
@@ -56,7 +21,6 @@ export const Board = (props) => {
         ) {
             return;
         }
-
 
         if (type === 'column') {
             const newColumnOrder = Array.from(state.columnOrder);
@@ -127,34 +91,15 @@ export const Board = (props) => {
         <DragDropContext
             onDragEnd={onDragEnd}
         >
+            <div id={'container'}>
+                {getDroppable({ editing, position: 'top', data: top })}
+                {getDroppable({ editing, position: 'content', data: content})}
+                {getDroppable({ editing, position: 'bottom', data: bottom })}
+            </div>
 
-            <Droppable isDropDisabled={!editing} droppableId={'content-columns'} direction={'horizontal'} type={'column'}>
-                {(provided) => (
-                    <ContainerFlex
-                        id={'content'}
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        layout={'sized'}
-                    >
-                        {content}
-                        {provided.placeholder}
-                    </ContainerFlex>
-                )}
-            </Droppable>
-
-            <Droppable isDropDisabled={!editing} droppableId={'footer-columns'} direction={'horizontal'} type={'column'}>
-                {(provided) => (
-                    <FooterFlex
-                        id={'footer'}
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        layout={'sized'}
-                    >
-                        {footer}
-                        {provided.placeholder}
-                    </FooterFlex>
-                )}
-            </Droppable>
+            <FooterFlex>
+                {getDroppable({ editing, position: 'footer', data: footer })}
+            </FooterFlex>
 
         </DragDropContext>
     )

@@ -8,10 +8,9 @@ export const Card = (props) => {
         editing
     } = props;
     if (task.type) {
-        const Component = cards[task.type]
+        const Component = cards[task.type];
         return (
             <Component
-                key={index}
                 {...task}
                 editing={editing}
             />
