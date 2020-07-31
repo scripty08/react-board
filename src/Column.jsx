@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { AddButton } from '@scripty/react-buttons';
 
 const StyledColumn = styled.div`
-    padding: 5px;
+    padding: ${props => (props.editing ? '8px' : '0px 5px')};
     border-radius: 2px;
     background-color: transparent;
 
@@ -70,6 +70,7 @@ export const Column = (props) => {
         <Draggable isDragDisabled={!editing} draggableId={column.id} index={index}>
             {(provider) => (
                 <StyledColumn
+                    editing={editing}
                     id={column.id}
                     className={column.class}
                     {...provider.draggableProps}

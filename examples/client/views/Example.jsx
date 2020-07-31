@@ -13,7 +13,7 @@ export const Example = () => {
     const [editing, setEditing] = useState(false);
 
     useEffect(() => {
-        boardsStore.proxy.read({ assignment: 'Dashboard' });
+        boardsStore.proxy.read({ assignment: 'Test' });
     }, []);
 
     const onEdit = () => {

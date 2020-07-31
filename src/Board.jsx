@@ -1,7 +1,7 @@
 import React from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { getData, getDroppable } from './Helper';
-import { ContainerFlex, FooterFlex } from '@scripty/styles';
+import { FooterFlex } from '@scripty/styles';
 
 export const Board = (props) => {
     const { state, setState, cards, editing, onAddBtnClick } = props;
