@@ -1,5 +1,5 @@
 import { Server, IndexController } from '@scripty/server';
-import BoardController from '@scripty/board';
+import { BoardsController, CardsController } from '@scripty/board';
 import dotenv from 'dotenv'
 import { mongo } from '@scripty/mongo';
 
@@ -23,7 +23,8 @@ const init = async () => {
 
     await server.setDatabase(mongoose);
     await server.addController(new IndexController({ title: '@scripty/react-board' }));
-    await server.addController(new BoardController());
+    await server.addController(new BoardsController());
+    await server.addController(new CardsController());
     server.start(3014);
 };
 

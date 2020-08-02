@@ -41,17 +41,17 @@ const Title = styled.h3`
     }
 `;
 
-const InnerList = React.memo(({ tasks, cards, editing }) => {
+const InnerList = React.memo(({ tasks, components, editing }) => {
     return tasks.map((task, index) => {
         if (task) {
-            return <Task index={index} key={task.id} task={task} cards={cards} editing={editing}/>
+            return <Task index={index} key={task._id} task={task} components={components} editing={editing}/>
         }
         return null;
     })
 });
 
 export const Column = (props) => {
-    const { column, tasks, index, cards, editing, onAddBtnClick = () => {} } = props;
+    const { column, tasks, index, components, editing, onAddBtnClick = () => {} } = props;
 
     const onClick = (key) => {
         onAddBtnClick(column.id, key);
@@ -59,7 +59,7 @@ export const Column = (props) => {
 
     const getMenu = () => {
         let menu = [];
-        Object.keys(cards).forEach((key, idx) => {
+        Object.keys(components).forEach((key, idx) => {
             menu.push(<a key={idx} aria-current={'page'} href={'#'} onClick={onClick.bind(null, key)} className={'active'}>{key}</a>);
         });
 
@@ -87,7 +87,7 @@ export const Column = (props) => {
                                 {...provided.droppableProps}
                                 isDraggingOver={snapshot.isDraggingOver}
                             >
-                               <InnerList tasks={tasks} cards={cards} editing={editing}/>
+                               <InnerList tasks={tasks} components={components} editing={editing}/>
                                 {provided.placeholder}
                             </Container>
                         )}

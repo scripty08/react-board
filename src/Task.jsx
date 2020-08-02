@@ -8,10 +8,10 @@ const Container = styled.div`
 `;
 
 export const Task = (props) => {
-    const { task, index, cards, editing} = props;
+    const { task, index, components, editing} = props;
     return (
         <Draggable
-            draggableId={task.id}
+            draggableId={task._id}
             index={index}
             isDragDisabled={!editing}
         >
@@ -27,7 +27,7 @@ export const Task = (props) => {
                         editing={editing}
                         task={task}
                         index={index}
-                        cards={cards} />
+                        components={components} />
                 </Container>
             )}
 

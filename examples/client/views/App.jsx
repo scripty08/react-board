@@ -3,13 +3,15 @@ import '@scripty/styles';
 import { hot } from 'react-hot-loader/root';
 import { Example } from './Example';
 import boardsStore from '../stores/boardsStore';
+import cardsStore from '../stores/cardsStore';
 import { StoreProvider } from '@scripty/react-store';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 const App = () => {
 
     let defaultStores = {
-        boardsStore
+        boardsStore,
+        cardsStore
     };
 
     return (

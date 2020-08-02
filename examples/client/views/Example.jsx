@@ -1,68 +1,76 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Board } from '../../../src';
+import { Board, createCardModel, getCardIds, updateBord, updateCardModel } from '../../../src';
 import { useStore } from '@scripty/react-store';
-import { EditButton, SaveButton } from '@scripty/react-buttons';
+import { Toolbar } from '@scripty/react-toolbar';
 import { Article } from '@scripty/react-articles';
-import { nanoid } from 'nanoid';
 import './Example.scss';
 import { Login } from '@scripty/react-login';
 
 export const Example = () => {
     const { boardsStore } = useStore('boardsStore');
-    const data = boardsStore.getAt(0);
+    const { cardsStore } = useStore('cardsStore');
+    const board = boardsStore.getAt(0);
+    const cards = cardsStore.data;
     const [editing, setEditing] = useState(false);
 
     useEffect(() => {
         boardsStore.proxy.read({ assignment: 'Test' });
     }, []);
 
+    useEffect(() => {
+        if (board.assignment !== '') {
+            cardsStore.proxy.find({ _ids: getCardIds(board) });
+        }
+    }, [board]);
+
     const onEdit = () => {
        setEditing(!editing);
     }
 
-    const onAddBtnClick = (columnId, type) => {
-        let id = nanoid();
-        data.tasks[id] = {
-            id: id,
-            type: type,
-            edit: true,
-            content: {
-                title: '',
-                html: '',
-            }
-        };
-
-        data.columns[columnId].taskIds.unshift(id);
-        data.set(data);
-        boardsStore.setData(data);
+    const onAddBtnClick = async (columnId, type) => {
+        const model = createCardModel(cardsStore, type, {
+            title: '',
+            html: '',
+        });
+        cardsStore.add(model);
+        updateBord(boardsStore, columnId, model);
     }
 
-    const onOkBtnClick = (id, article) => {
-        data.tasks[id].content = article;
-        delete data.tasks[id]['edit'];
-        data.set(data);
-        boardsStore.setData(data);
+    const onOkBtnClick = (_id, article) => {
+        updateCardModel(cardsStore, article, _id);
     }
 
-    const onDeleteBtnClick = (id) => {
-        delete data.tasks[id]
-        data.set(data);
+    const onDeleteBtnClick = (_id) => {
+        cardsStore.removeById(_id);
+        delete board.tasks[_id]
+        board.set(board);
     }
 
-    const onCancelBtnClick = (id, content) => {
-        if (content.title === '' && content.title === '') {
-            delete data.tasks[id]
-            data.set(data);
-            boardsStore.setData(data);
+    const onCancelBtnClick = (_id, content) => {
+        const dirtyRecords = cardsStore.getDirtyRecords();
+        if (dirtyRecords) {
+            cardsStore.removeById(_id);
         }
+
+        setEditing(!editing);
     }
 
     const onSubmit = (data) => {
         console.log('login submit action', '  ---------------------- ');
     }
 
-    const onSave = () => {
-        boardsStore.proxy.update({ assignment: 'Dashboard', ...data });
+    const onSave = async () => {
+        const dirtyRecords = cardsStore.getDirtyRecords();
+
+        if (dirtyRecords && dirtyRecords.updated.length !== -1) {
+            await cardsStore.proxy.update({cards: dirtyRecords.updated});
+        }
+
+        if (dirtyRecords && dirtyRecords.removed.length !== -1) {
+            await cardsStore.proxy.destroy({cards: dirtyRecords.removed});
+        }
+
+        await boardsStore.proxy.update({ assignment: 'Test', ...board });
         setEditing(!editing);
     }
 
@@ -71,29 +79,30 @@ export const Example = () => {
     }
 
     const ArticleCard = (props) => {
-        const { edit, content, editing, id } = props;
+        const { edit, content, editing, _id } = props;
 
         return (
             <Article
                 edit={edit}
                 {...content}
-                id={id}
+                id={_id}
                 showToolbar={editing}
-                onOkBtnClick={onOkBtnClick.bind(null, id )}
-                onCancelBtnClick={onCancelBtnClick.bind(null, id, content )}
-                onDeleteBtnClick={onDeleteBtnClick.bind(null, id, content )}
+                onOkBtnClick={onOkBtnClick.bind(null, _id )}
+                onCancelBtnClick={onCancelBtnClick.bind(null, _id, content )}
+                onDeleteBtnClick={onDeleteBtnClick.bind(null, _id, content )}
             />
         );
     }
 
     return (
         <Fragment>
-            <SaveButton onClick={onSave}/>
-            <EditButton onClick={onEdit}/>
+            <Toolbar onSaveBtnClick={onSave} onEditBtnClick={onEdit} visible/>
             <Board
-                state={data}
-                setState={state => data.set(state)}
-                cards={{ Article: ArticleCard, Login: LoginComponent }}
+                board={board}
+                setBoard={state => board.set(state)}
+                cards={cards}
+                setCards={cards => cards.set(cards)}
+                components={{ Article: ArticleCard, Login: LoginComponent }}
                 editing={editing}
                 onAddBtnClick={onAddBtnClick}
             />

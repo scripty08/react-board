@@ -2,13 +2,13 @@ import React from 'react';
 
 export const Card = (props) => {
     const {
-        cards,
+        components,
         index,
         task,
         editing
     } = props;
     if (task.type) {
-        const Component = cards[task.type];
+        const Component = components[task.type];
         return (
             <Component
                 {...task}

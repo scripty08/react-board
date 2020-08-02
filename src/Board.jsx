@@ -4,11 +4,11 @@ import { getData, getDroppable } from './Helper';
 import { FooterFlex } from '@scripty/styles';
 
 export const Board = (props) => {
-    const { state, setState, cards, editing, onAddBtnClick } = props;
-    const content = getData('column', state, cards, editing, onAddBtnClick);
-    const footer = getData('footer', state, cards, editing, onAddBtnClick);
-    const top = getData('top', state, cards, editing, onAddBtnClick);
-    const bottom = getData('bottom', state, cards, editing, onAddBtnClick);
+    const { board, setBoard, cards, setCards, components, editing, onAddBtnClick } = props;
+    const content = getData('column', board, cards, components, editing, onAddBtnClick);
+    const footer = getData('footer', board, cards, components, editing, onAddBtnClick);
+    const top = getData('top', board, cards, components, editing, onAddBtnClick);
+    const bottom = getData('bottom', board, cards, components, editing, onAddBtnClick);
 
     const onDragEnd = result => {
         const { destination, source, draggableId, type } = result;
@@ -23,21 +23,21 @@ export const Board = (props) => {
         }
 
         if (type === 'column') {
-            const newColumnOrder = Array.from(state.columnOrder);
+            const newColumnOrder = Array.from(board.columnOrder);
             newColumnOrder.splice(source.index, 1);
             newColumnOrder.splice(destination.index, 0, draggableId);
 
             const newState = {
-                ...state,
+                ...board,
                 columnOrder: newColumnOrder
             }
 
-            setState(newState);
+            setBoard(newState);
             return;
         }
 
-        const start = state.columns[source.droppableId];
-        const finish = state.columns[destination.droppableId];
+        const start = board.columns[source.droppableId];
+        const finish = board.columns[destination.droppableId];
 
         if (start === finish) {
             const newTaskIds = Array.from(start.taskIds);
@@ -50,14 +50,14 @@ export const Board = (props) => {
             }
 
             const newState = {
-                ...state,
+                ...board,
                 columns: {
-                    ...state.columns,
+                    ...board.columns,
                     [newColumn.id]: newColumn
                 }
             }
 
-            setState(newState);
+            setBoard(newState);
             return;
         }
 
@@ -76,15 +76,15 @@ export const Board = (props) => {
         };
 
         const newState = {
-            ...state,
+            ...board,
             columns: {
-                ...state.columns,
+                ...board.columns,
                 [newStart.id]: newStart,
                 [newFinish.id]: newFinish
             }
         };
 
-        setState(newState);
+        setBoard(newState);
     }
 
     return (
