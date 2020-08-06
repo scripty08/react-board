@@ -22,16 +22,20 @@
     "compile": "node node_modules/@babel/cli/bin/babel.js src --out-dir lib --copy-files"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.2.1",
     "@atlaskit/css-reset": "^6.0.0",
     "@scripty/board": "^0.1.14-13",
     "@scripty/react-buttons": "^0.1.8",
-    "@scripty/react-card": "^0.1.9",
+    "@scripty/react-card": "^0.1.13",
+    "@scripty/react-modal": "^0.1.0",
+    "@scripty/react-tables": "^0.1.0",
     "@scripty/styles": "^0.1.40",
     "nanoid": "^3.1.10",
     "prop-types": "^15.7.2",
     "react": "16.11.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "16.11.0",
+    "react-table": "^7.3.3",
     "styled-components": "^5.1.1"
   },
   "devDependencies": {

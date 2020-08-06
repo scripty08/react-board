@@ -3,15 +3,22 @@ import { Board, createCardModel, getCardIds, updateBord, updateCardModel } from 
 import { useStore } from '@scripty/react-store';
 import { Toolbar } from '@scripty/react-toolbar';
 import { Article } from '@scripty/react-articles';
+import { Modal } from '@scripty/react-modal';
 import './Example.scss';
 import { Login } from '@scripty/react-login';
+import { Table } from '@scripty/react-tables';
+
 
 export const Example = () => {
     const { boardsStore } = useStore('boardsStore');
     const { cardsStore } = useStore('cardsStore');
+    const { cardsTableStore } = useStore('cardsTableStore');
+    const [ modalVisible, setModalVisible ] = useState(false);
     const board = boardsStore.getAt(0);
     const cards = cardsStore.data;
     const [editing, setEditing] = useState(false);
+    const [columnId, setColumnId] = useState('');
+    const [selection, setSelection] = useState([]);
 
     useEffect(() => {
         boardsStore.proxy.read({ assignment: 'Test' });
@@ -27,11 +34,17 @@ export const Example = () => {
        setEditing(!editing);
     }
 
+    const onChooseBtnClick = async (columnId, type) => {
+        setColumnId(columnId);
+        await cardsTableStore.proxy.read({type: type});
+        setModalVisible(true);
+    };
+
     const onAddBtnClick = async (columnId, type) => {
         const model = createCardModel(cardsStore, type, {
             title: '',
             html: '',
-        });
+        }, true);
         cardsStore.add(model);
         updateBord(boardsStore, columnId, model);
     }
@@ -56,7 +69,7 @@ export const Example = () => {
     }
 
     const onSubmit = (data) => {
-        console.log('login submit action', '  ---------------------- ');
+        console.log('submit login', '  ---------------------- ');
     }
 
     const onSave = async () => {
@@ -94,6 +107,61 @@ export const Example = () => {
         );
     }
 
+    const onModalOkBtnClick = () => {
+
+        selection.map((rec) => {
+            console.log(rec.original, ' rec ---------------------- ');
+            const model = createCardModel(cardsStore, 'Article', {
+                title: rec.original.content.title,
+                html: rec.original.content.html,
+            });
+            cardsStore.add(model);
+            updateBord(boardsStore, columnId, model);
+        });
+
+
+        setModalVisible(false);
+    }
+
+    const onModalCancelBtnClick = () => {
+        setModalVisible(false);
+    }
+
+    const columns = React.useMemo(
+        () => [
+            {
+                Header: 'Name',
+                columns: [
+                    {
+                        Header: 'Type',
+                        accessor: 'type',
+                    },
+                    {
+                        Header: 'Title',
+                        accessor: (row, idx) => {
+                            if (row.content !== null) {
+                                if (typeof row.content.title !== 'undefined') {
+                                    return row.content.title
+                                }
+                            }
+
+                            return ''
+                        },
+                    },
+                ],
+            }
+        ],
+        []
+    )
+
+    const onPaginationChange = async (page, size) => {
+        await cardsTableStore.proxy.read({pagination: {size, page}});
+    };
+
+    const onSelectionChange = (data) => {
+        setSelection(data);
+    };
+
     return (
         <Fragment>
             <Toolbar onSaveBtnClick={onSave} onEditBtnClick={onEdit} visible/>
@@ -105,7 +173,23 @@ export const Example = () => {
                 components={{ Article: ArticleCard, Login: LoginComponent }}
                 editing={editing}
                 onAddBtnClick={onAddBtnClick}
+                onChooseBtnClick={onChooseBtnClick}
             />
+            <Modal
+                title={'Choose Cards'}
+                visible={modalVisible}
+                onOk={onModalOkBtnClick}
+                onCancel={onModalCancelBtnClick}
+                onClose={onModalCancelBtnClick}
+            >
+                <Table
+                    columns={columns}
+                    data={cardsTableStore.rawData}
+                    onSelectionChange={onSelectionChange}
+                    pagination={cardsTableStore.pagination}
+                    onPaginationChange={onPaginationChange}
+                />
+            </Modal>
         </Fragment>
     )
 

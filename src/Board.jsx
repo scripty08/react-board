@@ -4,11 +4,11 @@ import { getData, getDroppable } from './Helper';
 import { FooterFlex } from '@scripty/styles';
 
 export const Board = (props) => {
-    const { board, setBoard, cards, setCards, components, editing, onAddBtnClick } = props;
-    const content = getData('column', board, cards, components, editing, onAddBtnClick);
-    const footer = getData('footer', board, cards, components, editing, onAddBtnClick);
-    const top = getData('top', board, cards, components, editing, onAddBtnClick);
-    const bottom = getData('bottom', board, cards, components, editing, onAddBtnClick);
+    const { board, setBoard, cards, setCards, components, editing, onAddBtnClick, onChooseBtnClick } = props;
+    const content = getData('column', board, cards, components, editing, onAddBtnClick, onChooseBtnClick);
+    const footer = getData('footer', board, cards, components, editing, onAddBtnClick, onChooseBtnClick);
+    const top = getData('top', board, cards, components, editing, onAddBtnClick, onChooseBtnClick);
+    const bottom = getData('bottom', board, cards, components, editing, onAddBtnClick, onChooseBtnClick);
 
     const onDragEnd = result => {
         const { destination, source, draggableId, type } = result;

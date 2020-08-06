@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 export const Card = (props) => {
     const {
@@ -10,10 +10,12 @@ export const Card = (props) => {
     if (task.type) {
         const Component = components[task.type];
         return (
-            <Component
-                {...task}
-                editing={editing}
-            />
+            <Fragment>
+                <Component
+                    {...task}
+                    editing={editing}
+                />
+            </Fragment>
         )
     }
 

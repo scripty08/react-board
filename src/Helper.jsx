@@ -28,7 +28,7 @@ export const getDroppable = (props) => {
     );
 }
 
-const getColumn = (board, cards, columnId, index, components, editing, onAddBtnClick) => {
+const getColumn = (board, cards, columnId, index, components, editing, onAddBtnClick, onChooseBtnClick) => {
     const column = board.columns[columnId];
 
     const tasks = column.taskIds.map((taskId) => {
@@ -43,13 +43,14 @@ const getColumn = (board, cards, columnId, index, components, editing, onAddBtnC
         components={components}
         editing={editing}
         onAddBtnClick={onAddBtnClick}
+        onChooseBtnClick={onChooseBtnClick}
     />;
 };
 
-export const getData = (placement, board, cards, components, editing, onAddBtnClick) => {
+export const getData = (placement, board, cards, components, editing, onAddBtnClick, onChooseBtnClick) => {
     return board.columnOrder.map((columnId, index) => {
         if (columnId.indexOf(placement) !== -1) {
-            return getColumn(board, cards, columnId, index, components, editing, onAddBtnClick);
+            return getColumn(board, cards, columnId, index, components, editing, onAddBtnClick, onChooseBtnClick);
         }
         return null;
 
@@ -68,12 +69,12 @@ export const getCardIds = (board) => {
     return _ids;
 }
 
-export const createCardModel = (store, type, data = {}) => {
+export const createCardModel = (store, type, data = {}, edit = false) => {
     const nanoid = customAlphabet('1234567890abcdef', 24);
     return store.createModel({
         _id: nanoid(),
         type: type,
-        edit: true,
+        edit: edit,
         content: data
     });
 }

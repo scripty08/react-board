@@ -2,7 +2,8 @@ import React from 'react';
 import { Task } from './Task';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
-import { AddButton } from '@scripty/react-buttons';
+import { AddButton, Button } from '@scripty/react-buttons';
+import { UploadOutlined } from '@ant-design/icons';
 
 const StyledColumn = styled.div`
     padding: ${props => (props.editing ? '8px' : '0px 5px')};
@@ -51,16 +52,29 @@ const InnerList = React.memo(({ tasks, components, editing }) => {
 });
 
 export const Column = (props) => {
-    const { column, tasks, index, components, editing, onAddBtnClick = () => {} } = props;
+    const { column, tasks, index, components, editing, onAddBtnClick = () => {}, onChooseBtnClick = () => {}} = props;
 
     const onClick = (key) => {
         onAddBtnClick(column.id, key);
+    };
+
+    const onChooseClick = (key) => {
+        onChooseBtnClick(column.id, key);
     };
 
     const getMenu = () => {
         let menu = [];
         Object.keys(components).forEach((key, idx) => {
             menu.push(<a key={idx} aria-current={'page'} href={'#'} onClick={onClick.bind(null, key)} className={'active'}>{key}</a>);
+        });
+
+        return menu;
+    };
+
+    const getChooserMenu = () => {
+        let menu = [];
+        Object.keys(components).forEach((key, idx) => {
+            menu.push(<a key={idx} aria-current={'page'} href={'#'} onClick={onChooseClick.bind(null, key)} className={'active'}>{key}</a>);
         });
 
         return menu;
@@ -77,7 +91,10 @@ export const Column = (props) => {
                     ref={provider.innerRef}
                 >
                     <Title editing={editing} {...provider.dragHandleProps}>
-                        {column.title} <span key={index}><AddButton color={'white'} iconBtn rounded items={getMenu()} /></span>
+                        {column.title} <span key={index}>
+                        <AddButton color={'white'} iconBtn rounded items={getMenu()} />
+                        <Button icon={<UploadOutlined />} color={'white'} iconBtn rounded items={getChooserMenu()} />
+                        </span>
                     </Title>
                     <Droppable isDropDisabled={!editing} droppableId={column.id} type={'task'}>
                         {(provided, snapshot) => (
