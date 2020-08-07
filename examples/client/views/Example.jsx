@@ -8,7 +8,6 @@ import './Example.scss';
 import { Login } from '@scripty/react-login';
 import { Table } from '@scripty/react-tables';
 
-
 export const Example = () => {
     const { boardsStore } = useStore('boardsStore');
     const { cardsStore } = useStore('cardsStore');
@@ -53,9 +52,12 @@ export const Example = () => {
         updateCardModel(cardsStore, article, _id);
     }
 
-    const onDeleteBtnClick = (_id) => {
-        cardsStore.removeById(_id);
-        delete board.tasks[_id]
+    const onDeleteBtnClick = (_id, columnId) => {
+        // don´t delete card yet, because could be needed on other pages
+        //cardsStore.removeById(_id);
+        let columns = board.columns;
+        const column = columns[columnId];
+        column.taskIds.splice(column.taskIds.indexOf(_id), 1);
         board.set(board);
     }
 
@@ -92,8 +94,7 @@ export const Example = () => {
     }
 
     const ArticleCard = (props) => {
-        const { edit, content, editing, _id } = props;
-
+        const { edit, content, editing, _id, columnId } = props;
         return (
             <Article
                 edit={edit}
@@ -102,24 +103,20 @@ export const Example = () => {
                 showToolbar={editing}
                 onOkBtnClick={onOkBtnClick.bind(null, _id )}
                 onCancelBtnClick={onCancelBtnClick.bind(null, _id, content )}
-                onDeleteBtnClick={onDeleteBtnClick.bind(null, _id, content )}
+                onDeleteBtnClick={onDeleteBtnClick.bind(null, _id, columnId )}
             />
         );
     }
 
     const onModalOkBtnClick = () => {
-
         selection.map((rec) => {
-            console.log(rec.original, ' rec ---------------------- ');
-            const model = createCardModel(cardsStore, 'Article', {
+            const model = createCardModel(cardsStore, 'Article', rec.original._id, {
                 title: rec.original.content.title,
                 html: rec.original.content.html,
             });
             cardsStore.add(model);
             updateBord(boardsStore, columnId, model);
         });
-
-
         setModalVisible(false);
     }
 

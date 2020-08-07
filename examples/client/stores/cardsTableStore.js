@@ -5,7 +5,8 @@ export default createStore({
     model: {
         fields: [
             { name: 'type', type: 'string' },
-            { name: 'content', type: 'object'}
+            { name: 'content', type: 'object'},
+            { name: '_id', type: 'string'}
         ]
     },
     proxy: {

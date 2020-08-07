@@ -5,6 +5,7 @@ export const Card = (props) => {
         components,
         index,
         task,
+        columnId,
         editing
     } = props;
     if (task.type) {
@@ -13,6 +14,8 @@ export const Card = (props) => {
             <Fragment>
                 <Component
                     {...task}
+                    taskIndex={index}
+                    columnId={columnId}
                     editing={editing}
                 />
             </Fragment>

@@ -69,14 +69,16 @@ export const getCardIds = (board) => {
     return _ids;
 }
 
-export const createCardModel = (store, type, data = {}, edit = false) => {
+export const createCardModel = (store, type, _id, data = {}, edit = false) => {
     const nanoid = customAlphabet('1234567890abcdef', 24);
-    return store.createModel({
-        _id: nanoid(),
+    const modelData = {
+        _id: _id || nanoid(),
         type: type,
         edit: edit,
         content: data
-    });
+    };
+    console.log(modelData, ' modelData ---------------------- ');
+    return store.createModel(modelData);
 }
 
 export const updateCardModel = (cardsStore, article, _id) => {

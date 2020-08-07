@@ -42,10 +42,10 @@ const Title = styled.h3`
     }
 `;
 
-const InnerList = React.memo(({ tasks, components, editing }) => {
+const InnerList = React.memo(({ tasks, components, editing, columnId }) => {
     return tasks.map((task, index) => {
         if (task) {
-            return <Task index={index} key={task._id} task={task} components={components} editing={editing}/>
+            return <Task columnId={columnId} index={index} key={task._id} task={task} components={components} editing={editing}/>
         }
         return null;
     })
@@ -104,7 +104,7 @@ export const Column = (props) => {
                                 {...provided.droppableProps}
                                 isDraggingOver={snapshot.isDraggingOver}
                             >
-                               <InnerList tasks={tasks} components={components} editing={editing}/>
+                               <InnerList columnId={column.id} tasks={tasks} components={components} editing={editing}/>
                                 {provided.placeholder}
                             </Container>
                         )}
